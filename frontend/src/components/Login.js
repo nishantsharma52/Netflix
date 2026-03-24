@@ -1,17 +1,67 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from './Header'
+import axios from "axios"
+import { API_END_POINT } from '../utils/constant'
+import toast from 'react-hot-toast'
 
 function Login() {
+  const [isLogin, setIsLogin] = useState(false)
+  const [fullname, setFullname] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const loginHandler = () => {
+    setIsLogin(!isLogin);
+  }
+  const getInputData = async (e) => {
+    e.preventDefault();
+    if (isLogin) {
+      //login
+       const user = { email, password }
+      try {
+        const res = await axios.post(`${API_END_POINT}/login`, user)
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+
+    } else {
+      //register
+       const user = { fullname, email, password }
+      try {
+        const res = await axios.post(`${API_END_POINT}/register`, user)
+       
+        if (res.data.success) {
+          toast.success(res.data.message);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message)
+        console.log(error);
+      }
+
+
+    }
+    setFullname("");
+    setPassword("");
+    setEmail("");
+
+  }
   return (
     <div>
       <Header />
-      <div>
-        <img className='w-[100vw] h-[100vh]' src='https://cdn.mos.cms.futurecdn.net/rDJegQJaCyGaYysj2g5XWY-970-80.jpg.webp' alt='banner' />
+      <div className='absolute'>
+        <img className='w-[100vw] h-[100vh] bg-cover' src='https://cdn.mos.cms.futurecdn.net/rDJegQJaCyGaYysj2g5XWY-970-80.jpg.webp' alt='banner' />
       </div>
-      <form>
-        <div>
-          <label>Full Name</label>
-          <input/>
+      <form onSubmit={getInputData} className=' rounded-md flex flex-col w-3/12 p-12 my-36 left-0 right-0 mx-auto items-center justify-center absolute bg-black opacity-90'>
+        <h1 className='text-3xl font-bold text-white mb-5 '>{isLogin ? "Login" : "Signup"}</h1>
+        <div className='flex flex-col'>
+          {
+            !isLogin && <input value={fullname} onChange={(e) => setFullname(e.target.value)} type="text" placeholder='Fullname ' className=' outline-none p-3 my-2 rounded-sm bg-gray-800 text-white' />
+          }
+
+          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder='Email ' className=' outline-none p-3 my-2 rounded-sm bg-gray-800 text-white' />
+          <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder='Password ' className=' outline-none p-3 my-2 rounded-sm bg-gray-800 text-white' />
+          <button className='bg-red-600 rounded-sm text-white font-medium p-3 mt-6'>{isLogin ? "Login" : "Signup"}</button>
+          <p className='text-white mt-2'>{isLogin ? "New to Netflix?" : "Already have an account? "} <span onClick={loginHandler} className='cursor-pointer ml-1 text-blue-900 font-medium'>{isLogin ? "Signup" : "Login"}</span></p>
         </div>
       </form>
     </div>
