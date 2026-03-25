@@ -34,7 +34,8 @@ export const Login = async (req, res) => {
         const token = await jwt.sign(tokenData, "hiwhfskjdnfhjdshbuewjbsjab", {expiresIn:"1d"})
 
         return res.status(200).cookie("token", token, {httpOnly:true}).json({
-            message:"Welcome back {user.fullname}",
+            message:`Welcome back ${user.fullname}`,
+            user,
             success:true
         })
 
