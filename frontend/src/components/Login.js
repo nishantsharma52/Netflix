@@ -4,8 +4,8 @@ import axios from "axios"
 import { API_END_POINT } from '../utils/constant'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { setUser } from '../redux/userSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { setLoading, setUser } from '../redux/userSlice'
 
 function Login() {
   const [isLogin, setIsLogin] = useState(false)
@@ -15,11 +15,14 @@ function Login() {
   const nevigate = useNavigate()
   const dispatch = useDispatch()
 
+  const isLoading = useSelector(store => store.app.isLoading)
+
   const loginHandler = () => {
     setIsLogin(!isLogin);
   }
   const getInputData = async (e) => {
     e.preventDefault();
+    dispatch(setLoading(true))
     if (isLogin) {
       //login
       const user = { email, password }
@@ -40,10 +43,13 @@ function Login() {
       } catch (error) {
         toast.error(error.response.data.message)
         console.log(error);
+      } finally {
+        dispatch(setLoading(false))
       }
 
     } else {
       //register
+      dispatch(setLoading(true))
       const user = { fullname, email, password }
       try {
         const res = await axios.post(`${API_END_POINT}/register`, user, {
@@ -60,6 +66,8 @@ function Login() {
       } catch (error) {
         toast.error(error.response.data.message)
         console.log(error);
+      } finally {
+        dispatch(setLoading(false))
       }
 
 
@@ -84,7 +92,7 @@ function Login() {
 
           <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder='Email ' className=' outline-none p-3 my-2 rounded-sm bg-gray-800 text-white' />
           <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder='Password ' className=' outline-none p-3 my-2 rounded-sm bg-gray-800 text-white' />
-          <button className='bg-red-600 rounded-sm text-white font-medium p-3 mt-6'>{isLogin ? "Login" : "Signup"}</button>
+          <button type='submit' className='bg-red-600 rounded-sm text-white font-medium p-3 mt-6'>{`${isLoading ? "loading..." : (isLogin ? "Login" : "Signup")}`}</button>
           <p className='text-white mt-2'>{isLogin ? "New to Netflix?" : "Already have an account? "} <span onClick={loginHandler} className='cursor-pointer ml-1 text-blue-900 font-medium'>{isLogin ? "Signup" : "Login"}</span></p>
         </div>
       </form>
