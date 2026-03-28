@@ -10,6 +10,7 @@ import { setToggle } from '../redux/movieSlice';
 
 function Header() {
   const user = useSelector((store)=>store.app.user)
+  const toggle = useSelector(store=>store.movie.toggle)
   const dispatch = useDispatch()
   const nevigate = useNavigate()
 
@@ -44,7 +45,7 @@ function Header() {
         <h1 className='text-lg font-mono text-white'>{user?.fullname}</h1>
         <div className='ml-4'>
           <button onClick={logoutHandler} className='bg-red-800 text-white py-2 px-4'>logout</button>
-          <button onClick={toggleHandler} className='bg-red-800 text-white py-2 px-4 ml-2'>Search Movi</button>
+          <button onClick={toggleHandler} className='bg-red-800 text-white py-2 px-4 ml-2'>{toggle ? "Home" : "Search Movie"}</button>
         </div>
       </div>
         )
