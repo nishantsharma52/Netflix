@@ -1,25 +1,34 @@
 import axios from 'axios';
-import { useEffect } from 'react'; // 1. useEffect import karo
+import { useEffect } from 'react'; 
 import { options } from '../utils/constant';
 import { useDispatch } from 'react-redux';
 import { getTrailerMovie } from '../redux/movieSlice';
 
-const useMovieById = (movieId) => { // 2. Yahan se 'async' hata do
+const useMovieById = (movieId) => { 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // 3. Ek internal async function banao
         const getMovieById = async () => {
             try {
                 const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/videos`, options);
                 
+                // 1. Pehle trailers filter karo
                 const trailers = res?.data?.results?.filter((item) => {
                     return item.type === "Trailer";
                 });
 
-                dispatch(getTrailerMovie(trailers.length > 0 ? trailers[0] : res.data.results[0]));
+                // --- YE WALI JAGAH HAI ---
+                // 2. Check karo agar trailer mila, nahi toh pehli video uthao
+                const trailer = trailers.length > 0 ? trailers[0] : res.data.results[0];
+
+                // 3. Agar trailer (ya koi bhi video) mil gayi hai, tabhi dispatch karo
+                if (trailer) {
+                    dispatch(getTrailerMovie(trailer));
+                }
+                // -----------------------
+
             } catch (error) {
-                console.log(error);
+                console.log("Error fetching movie videos:", error);
             }
         };
 
@@ -27,7 +36,7 @@ const useMovieById = (movieId) => { // 2. Yahan se 'async' hata do
             getMovieById();
         }
 
-    }, [movieId, dispatch]); // 4. Dependency array zaroori hai loop rokne ke liye
+    }, [movieId, dispatch]); 
 }
 
 export default useMovieById;
