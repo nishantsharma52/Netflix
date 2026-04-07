@@ -1,21 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ViedoTitle from './ViedoTitle'
 import ViedoBackground from './ViedoBackground'
 import { useSelector } from 'react-redux'
 
 function MainContainer() {
-  const movie = useSelector(store=>store.movie?.nowPlayingMovie)
-  if(!movie) return;
-
-  console.log(movie);
+  const movie = useSelector(store => store.movie?.nowPlayingMovie)
   
-  const {overview, title, id} = movie[0]
+  if (!movie) return null;
+  
+  const { overview, title, id } = movie[0]
 
   return (
-    <div className=' overflow-x-hidden'>
-        <ViedoTitle title={title} overview={overview}/>
-        <ViedoBackground movieId={id}/>
-      
+    <div 
+      className='relative w-screen h-screen overflow-hidden'
+      // Yeh div click hote hi browser "user interaction" maanta hai
+      onClick={() => {}}  
+    >
+      <ViedoBackground key={id} movieId={id} />
+      <ViedoTitle title={title} overview={overview} />
     </div>
   )
 }
