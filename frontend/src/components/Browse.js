@@ -26,6 +26,7 @@ function Browse() {
   useUpcomingMovies()
 
 
+
   useEffect(() => {
     if (!user) {
       navigate("/")
