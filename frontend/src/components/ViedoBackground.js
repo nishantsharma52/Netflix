@@ -2,30 +2,24 @@ import React from 'react'
 import useMovieById from '../hooks/useMovieById'
 import { useSelector } from 'react-redux'
 
-const ViedoBackground = ({ movieId, bool }) => { // Typo fixed to 'VideoBackground'
+const VideoBackground = ({ movieId, bool }) => {
     const trailerMovie = useSelector(store => store.movie.trailerMovie)
     useMovieById(movieId)
 
     if (!trailerMovie) return null;
 
     return (
-        // --- YE WALA BADLAV SABSE ZAROORI HAI ---
-        // 'bool' check karke width class set karo. 
-        // Agar bool true hai (Dialog ke andar), toh width 'w-full' rakho takki ye apne container mein fit ho jaye.
-        // Agar bool false hai (Main page par), toh width 'w-screen' rakho takki ye full-screen background video bane.
-        // overflow-hidden safety ke liye add kiya hai.
-        <div className={`${bool ? 'w-full' : 'w-screen'} overflow-hidden`}>
-            <iframe
-                // Iframe hamesha parent container ke size par scale karega aur aspect ratio maintain rakhega.
-                // className ko simplify kiya hai.
-                className='w-full aspect-video' 
-                src={`https://www.youtube.com/embed/${trailerMovie.key}?si=w4dViftqzWYxUTmj&autoplay=1&mute=1`}
-                title="YouTube video player"
-                frameBorder="0"
-                allowFullScreen>
-            </iframe>
-        </div>
+        <div className='absolute top-0 left-0 w-full h-full -z-10'>
+    <iframe
+        className='w-full h-full'
+       src={`https://www.youtube.com/embed/${trailerMovie.key}?autoplay=1&mute=1&loop=1&playlist=${trailerMovie.key}&controls=0&rel=0&modestbranding=1&origin=${window.location.origin}`}
+        title="YouTube video player"
+        frameBorder="0"
+        allow=" autoplay; fullscreen "
+        allowFullScreen
+    />
+</div>
     )
 }
 
-export default ViedoBackground;
+export default VideoBackground;
