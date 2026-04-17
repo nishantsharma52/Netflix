@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Header from './Header'
+import Header from './Header';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import MainContainer from './MainContainer';
