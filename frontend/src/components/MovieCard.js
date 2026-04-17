@@ -1,7 +1,7 @@
 import React from 'react'
 import { Banner_Url } from '../utils/constant'
 import { useDispatch } from 'react-redux'
-import { getId, setOpen } from '../redux/movieSlice'
+import { getId, setOpen } from '../redux/movieSlice';
 
 const MovieCard = ({ posterPath, movieId }) => {
     const dispatch = useDispatch()
